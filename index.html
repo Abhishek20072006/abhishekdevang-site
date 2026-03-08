@@ -13,13 +13,7 @@
             --border: #222;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            /* Fixes gray flash on mobile taps */
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg);
@@ -27,8 +21,9 @@
             font-family: 'Lexend', sans-serif;
             overflow-x: hidden;
             cursor: crosshair;
-            /* Smoother text rendering on Mac/iOS */
             -webkit-font-smoothing: antialiased;
+            /* Ensures smooth scrolling on Android */
+            scroll-behavior: smooth; 
         }
 
         /* --- ANIMATIONS --- */
@@ -48,7 +43,6 @@
         }
 
         .reveal-box { overflow: hidden; display: block; }
-        
         nav { opacity: 0; animation: fadeIn 0.8s 0.2s forwards; }
         .hero h1 span { 
             display: inline-block;
@@ -56,13 +50,11 @@
             animation: revealUp 1s cubic-bezier(0.77, 0, 0.175, 1) forwards; 
         }
         .hero-desc { opacity: 0; animation: fadeIn 0.8s 1s forwards; }
-        .contact-bar { opacity: 0; animation: fadeIn 0.8s 1.2s forwards; }
 
         /* --- UI ELEMENTS --- */
         .reveal-mask {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            /* Starts off-screen so it doesn't blink on load */
             background: radial-gradient(circle 120px at var(--x, -500px) var(--y, -500px), rgba(234, 255, 0, 0.1), transparent 100%);
             pointer-events: none;
             z-index: 10;
@@ -71,37 +63,32 @@
         .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
         nav {
-            padding: 40px 0;
+            padding: 30px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-family: 'Archivo Black'; font-size: 1.2rem; color: var(--yellow); letter-spacing: 5px; }
+        .logo { font-family: 'Archivo Black'; font-size: 1rem; color: var(--yellow); letter-spacing: 4px; }
 
         .hero {
-            /* svh is crucial for mobile Safari address bar fixes */
-            min-height: 90svh;
+            min-height: 85svh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 80px 0;
+            padding: 60px 0;
             position: relative;
         }
 
         .hero p.status { 
-            position: absolute;
-            top: 50px;
-            left: 5px;
             color: var(--yellow); 
-            font-size: 0.75rem; 
-            letter-spacing: 20px;
+            font-size: 0.65rem; 
+            letter-spacing: 12px;
             text-transform: uppercase;
-            white-space: nowrap;
+            margin-bottom: 20px;
             opacity: 0;
             animation: fadeIn 0.8s 0.4s forwards;
-            z-index: 5;
         }
 
         .name-container { 
@@ -110,32 +97,24 @@
             gap: 40px; 
             flex-wrap: nowrap;
             position: relative;
-            margin-top: 50px;
         }
 
         .hero h1 {
             font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(3rem, 14vw, 8rem); 
-            line-height: 0.75;
+            font-size: clamp(2.8rem, 12vw, 8rem); 
+            line-height: 0.8;
             text-transform: uppercase;
-            letter-spacing: -5px;
+            letter-spacing: -3px;
         }
 
         .hero h1 span { display: inline-block; transition: 0.4s; }
-        
-        /* Only apply hover effects on devices that actually support hovering */
-        @media (hover: hover) {
-            .hero h1 span:hover { color: var(--yellow); transform: scale(1.05); }
-            .card:hover { border-color: var(--yellow); }
-        }
 
         .hero-profile-img {
-            width: clamp(150px, 25vw, 400px); 
-            height: clamp(150px, 25vw, 400px); 
+            width: clamp(150px, 22vw, 380px); 
+            height: clamp(150px, 22vw, 380px); 
             border: 2px solid var(--border);
             object-fit: cover;
             filter: grayscale(100%);
-            transition: 0.6s;
             animation: fadeIn 1s 0.8s forwards;
             opacity: 0;
             flex-shrink: 0;
@@ -146,72 +125,67 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            padding-bottom: 100px;
+            padding-bottom: 80px;
         }
 
         .card {
             background: #0a0a0a;
             border: 1px solid var(--border);
-            padding: 50px;
+            padding: 45px;
             transition: 0.3s ease;
             cursor: pointer;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
         .card-lg { grid-column: span 2; }
-        .tag { color: var(--yellow); font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 20px; display: block; }
-        h2 { font-family: 'Archivo Black'; font-size: 1.8rem; margin-bottom: 10px; }
+        .tag { color: var(--yellow); font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 15px; display: block; }
+        h2 { font-family: 'Archivo Black'; font-size: 1.6rem; margin-bottom: 8px; }
 
-        /* Shared List Styles */
-        .expand-list {
-            list-style: none;
-            margin-top: 20px;
-            display: none;
+        .expand-list { list-style: none; margin-top: 15px; display: none; }
+        .list-item { 
+            padding: 12px 0; 
+            border-bottom: 1px solid #1a1a1a; 
+            animation: listSlide 0.4s forwards;
         }
 
-        .list-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #222;
-            opacity: 0;
-            animation: listSlide 0.5s forwards;
-        }
-
-        .list-item h4 { font-size: 1rem; color: var(--accent); }
-        .list-item p { font-size: 0.75rem; opacity: 0.5; margin-top: 4px; }
-        .list-item a { color: var(--yellow); text-decoration: none; font-size: 0.8rem; }
-
-        .contact-bar { margin-top: 60px; display: flex; gap: 20px; flex-wrap: wrap; }
+        .contact-bar { margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; }
         .social-link {
-            padding: 18px 35px;
+            padding: 16px 28px;
             border: 1px solid var(--border);
             text-decoration: none;
             color: white;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             transition: 0.3s;
             background: rgba(255,255,255,0.02);
-            text-align: center;
             flex-grow: 1;
+            text-align: center;
+        }
+
+        /* --- MOBILE NEATNESS FIXES --- */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .hero { padding: 80px 0 40px; min-height: auto; }
+            .hero p.status { letter-spacing: 4px; font-size: 0.6rem; }
+            .name-container { flex-direction: column; align-items: flex-start; gap: 25px; }
+            .hero-profile-img { width: 100%; height: 320px; border-width: 1px; }
+            .hero h1 { letter-spacing: -1px; width: 100%; }
+            .bento-grid { grid-template-columns: 1fr; gap: 15px; }
+            .card-lg { grid-column: span 1; }
+            .card { padding: 25px; } /* Neater padding on phones */
+            h2 { font-size: 1.3rem; }
+            .social-link { padding: 14px 20px; }
         }
 
         @media (hover: hover) {
+            .hero h1 span:hover { color: var(--yellow); transform: scale(1.05); }
+            .card:hover { border-color: var(--yellow); }
             .social-link:hover { border-color: var(--yellow); background: var(--yellow); color: black; }
         }
 
-        footer { padding: 60px 0; border-top: 1px solid var(--border); text-align: center; opacity: 0.4; font-size: 0.7rem; }
-
-        @media (max-width: 1024px) {
-            .container { padding: 0 20px; }
-            .name-container { flex-direction: column; align-items: flex-start; gap: 20px; }
-            .hero-profile-img { width: 100%; height: 300px; }
-            .hero h1 { letter-spacing: -2px; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .card-lg { grid-column: span 1; }
-            .hero { min-height: auto; padding: 120px 0 60px; }
-        }
+        footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; opacity: 0.3; font-size: 0.6rem; }
     </style>
 </head>
 <body>
@@ -220,26 +194,26 @@
 
     <div class="container">
         <nav>
-            <div class="logo">PROFILE</div>
-            <div style="font-size: 0.6rem; opacity: 0.5;">v.2026.03</div>
+            <div class="logo">PORTFOLIO</div>
+            <div style="font-size: 0.5rem; opacity: 0.4; letter-spacing: 2px;">V.2026.03</div>
         </nav>
 
         <header class="hero">
+            <p class="status">Computer Science Engineering</p>
             <div class="name-container">
-                <p class="status">[ Computer Science Engineering ]</p>
                 <h1 class="reveal-box">
                     <span style="animation-delay: 0.5s;">A</span><span style="animation-delay: 0.55s;">B</span><span style="animation-delay: 0.6s;">H</span><span style="animation-delay: 0.65s;">I</span><span style="animation-delay: 0.7s;">S</span><span style="animation-delay: 0.75s;">H</span><span style="animation-delay: 0.8s;">E</span><span style="animation-delay: 0.85s;">K</span><span style="animation-delay: 0.9s;">.</span><span style="animation-delay: 0.95s;">V</span>
                 </h1>
                 <img src="aa.jpg" alt="Abhishek V" class="hero-profile-img">
             </div>
             
-            <p class="hero-desc" style="max-width: 650px; margin-top: 40px; line-height: 1.6; font-size: 1.1rem;">
-                Architecting digital ecosystems through structural logic and high-fidelity interfaces. Currently engineering the future of Computer Science.
+            <p class="hero-desc" style="max-width: 550px; margin-top: 30px; line-height: 1.6; opacity: 0.8;">
+                Architecting digital systems through logic and precision. Currently engineering the future of Computer Science at P.E.S.I.T.M.
             </p>
 
             <div class="contact-bar">
                 <a href="https://www.instagram.com/_classy_boy_14_/" target="_blank" class="social-link">INSTAGRAM</a>
-                <a href="mailto:your.email@gmail.com" class="social-link">CONTACT GMAIL</a>
+                <a href="mailto:your.email@gmail.com" class="social-link">GMAIL</a>
             </div>
         </header>
 
@@ -247,46 +221,34 @@
             <div class="card card-lg" onclick="toggleSection('edu-list', 'edu-title')">
                 <span class="tag">01 / BACKGROUND</span>
                 <h2 id="edu-title">ACADEMIC CORE +</h2>
-                <p id="edu-desc" style="opacity: 0.6;">History of institutions and specialized training.</p>
-                
                 <ul id="edu-list" class="expand-list">
-                    <li class="list-item" style="animation-delay: 0.1s;">
-                        <h4>Pursuing B.Tech in Computer Science</h4>
-                        <p>P.E.S. Institute of Technology and Management | 2024 - 2028</p>
+                    <li class="list-item">
+                        <h4>B.Tech in Computer Science</h4>
+                        <p>P.E.S. Institute of Technology | 2024 - 2028</p>
                     </li>
-                    <li class="list-item" style="animation-delay: 0.2s;">
-                        <h4>Higher Secondary Education</h4>
-                        <p>B.G.S GURUKULA INDEPENDENT PU COLLEGE BULLAPURA | 2022 - 2023</p>
-                    </li>
-                    <li class="list-item" style="animation-delay: 0.3s;">
-                        <h4>Secondary School Leaving Certificate</h4>
-                        <p> ESHWARAMMA HIGH SCHOOL | Completed 2021</p>
+                    <li class="list-item">
+                        <h4>Higher Secondary</h4>
+                        <p>B.G.S Gurukula | 2022 - 2023</p>
                     </li>
                 </ul>
             </div>
 
             <div class="card" onclick="toggleSection('cert-list', 'cert-title')">
-                <span class="tag">02 / ACHIEVEMENTS</span>
-                <h2 id="cert-title">CERTIFICATIONS +</h2>
-                
+                <span class="tag">02 / SKILLS</span>
+                <h2 id="cert-title">CERTIFICATES +</h2>
                 <ul id="cert-list" class="expand-list">
-                    <li class="list-item" style="animation-delay: 0.1s;">
-                        <a href="https://www.hackerrank.com/certificates/iframe/11d7eb6f5dc2" target="_blank">Python (Basic)</a>
-                    </li>
-                    <li class="list-item" style="animation-delay: 0.2s;">
-                        <a href="#" target="_blank">AI/ML Fundamentals <span>2025</span></a>
-                    </li>
+                    <li class="list-item">Python (Basic) - HackerRank</li>
+                    <li class="list-item">AI/ML Fundamentals</li>
                 </ul>
             </div>
         </section>
 
         <footer>
-            © 2026 ABHISHEK.V // ALL SYSTEMS FUNCTIONAL
+            © 2026 ABHISHEK.V // SYSTEM STABLE
         </footer>
     </div>
 
     <script>
-        // Combined mouse and touch listener for the reveal mask
         const updateGlow = (e) => {
             let x, y;
             if (e.type.includes('touch')) {
@@ -304,16 +266,12 @@
         window.addEventListener('touchstart', updateGlow, {passive: true});
         window.addEventListener('touchmove', updateGlow, {passive: true});
 
-        // Universal toggle function for any card
         function toggleSection(listId, titleId) {
             const list = document.getElementById(listId);
             const title = document.getElementById(titleId);
             const isOpening = list.style.display !== 'block';
-
             list.style.display = isOpening ? 'block' : 'none';
-            
-            // Updates text to show + or -
-            const baseText = title.innerText.replace(' +', '').replace(' -', '');
+            const baseText = title.innerText.split(' ')[0];
             title.innerText = baseText + (isOpening ? ' -' : ' +');
         }
     </script>

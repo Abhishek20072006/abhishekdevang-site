@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Abhishek V | B.Tech Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Lexend:wght@300;600&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +13,13 @@
             --border: #222;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            /* Fixes gray flash on mobile taps */
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         body {
             background-color: var(--bg);
@@ -21,6 +27,8 @@
             font-family: 'Lexend', sans-serif;
             overflow-x: hidden;
             cursor: crosshair;
+            /* Smoother text rendering on Mac/iOS */
+            -webkit-font-smoothing: antialiased;
         }
 
         /* --- ANIMATIONS --- */
@@ -43,6 +51,7 @@
         
         nav { opacity: 0; animation: fadeIn 0.8s 0.2s forwards; }
         .hero h1 span { 
+            display: inline-block;
             transform: translateY(110%); 
             animation: revealUp 1s cubic-bezier(0.77, 0, 0.175, 1) forwards; 
         }
@@ -53,7 +62,8 @@
         .reveal-mask {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle 120px at var(--x, 50%) var(--y, 50%), rgba(234, 255, 0, 0.1), transparent 100%);
+            /* Starts off-screen so it doesn't blink on load */
+            background: radial-gradient(circle 120px at var(--x, -500px) var(--y, -500px), rgba(234, 255, 0, 0.1), transparent 100%);
             pointer-events: none;
             z-index: 10;
         }
@@ -71,7 +81,8 @@
         .logo { font-family: 'Archivo Black'; font-size: 1.2rem; color: var(--yellow); letter-spacing: 5px; }
 
         .hero {
-            min-height: 90vh;
+            /* svh is crucial for mobile Safari address bar fixes */
+            min-height: 90svh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -111,7 +122,12 @@
         }
 
         .hero h1 span { display: inline-block; transition: 0.4s; }
-        .hero h1 span:hover { color: var(--yellow); transform: scale(1.05); }
+        
+        /* Only apply hover effects on devices that actually support hovering */
+        @media (hover: hover) {
+            .hero h1 span:hover { color: var(--yellow); transform: scale(1.05); }
+            .card:hover { border-color: var(--yellow); }
+        }
 
         .hero-profile-img {
             width: clamp(150px, 25vw, 400px); 
@@ -144,7 +160,6 @@
             flex-direction: column;
         }
 
-        .card:hover { border-color: var(--yellow); }
         .card-lg { grid-column: span 2; }
         .tag { color: var(--yellow); font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 20px; display: block; }
         h2 { font-family: 'Archivo Black'; font-size: 1.8rem; margin-bottom: 10px; }
@@ -178,17 +193,24 @@
             text-transform: uppercase;
             transition: 0.3s;
             background: rgba(255,255,255,0.02);
+            text-align: center;
+            flex-grow: 1;
         }
-        .social-link:hover { border-color: var(--yellow); background: var(--yellow); color: black; }
+
+        @media (hover: hover) {
+            .social-link:hover { border-color: var(--yellow); background: var(--yellow); color: black; }
+        }
 
         footer { padding: 60px 0; border-top: 1px solid var(--border); text-align: center; opacity: 0.4; font-size: 0.7rem; }
 
         @media (max-width: 1024px) {
+            .container { padding: 0 20px; }
             .name-container { flex-direction: column; align-items: flex-start; gap: 20px; }
             .hero-profile-img { width: 100%; height: 300px; }
             .hero h1 { letter-spacing: -2px; }
             .bento-grid { grid-template-columns: 1fr; }
             .card-lg { grid-column: span 1; }
+            .hero { min-height: auto; padding: 120px 0 60px; }
         }
     </style>
 </head>
@@ -199,7 +221,7 @@
     <div class="container">
         <nav>
             <div class="logo">PROFILE</div>
-            <div style="font-size: 0.6rem; opacity: 0.5;">v.2026.02</div>
+            <div style="font-size: 0.6rem; opacity: 0.5;">v.2026.03</div>
         </nav>
 
         <header class="hero">
@@ -249,7 +271,7 @@
                 
                 <ul id="cert-list" class="expand-list">
                     <li class="list-item" style="animation-delay: 0.1s;">
-                        <a href="https://www.hackerrank.com/certificates/iframe/11d7eb6f5dc2" target="_blank">Python (Basic)  <span></span></a>
+                        <a href="https://www.hackerrank.com/certificates/iframe/11d7eb6f5dc2" target="_blank">Python (Basic)</a>
                     </li>
                     <li class="list-item" style="animation-delay: 0.2s;">
                         <a href="#" target="_blank">AI/ML Fundamentals <span>2025</span></a>
@@ -264,10 +286,23 @@
     </div>
 
     <script>
-        window.addEventListener('mousemove', (e) => {
-            document.body.style.setProperty('--x', e.clientX + 'px');
-            document.body.style.setProperty('--y', e.clientY + 'px');
-        });
+        // Combined mouse and touch listener for the reveal mask
+        const updateGlow = (e) => {
+            let x, y;
+            if (e.type.includes('touch')) {
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else {
+                x = e.clientX;
+                y = e.clientY;
+            }
+            document.body.style.setProperty('--x', x + 'px');
+            document.body.style.setProperty('--y', y + 'px');
+        };
+
+        window.addEventListener('mousemove', updateGlow);
+        window.addEventListener('touchstart', updateGlow, {passive: true});
+        window.addEventListener('touchmove', updateGlow, {passive: true});
 
         // Universal toggle function for any card
         function toggleSection(listId, titleId) {
